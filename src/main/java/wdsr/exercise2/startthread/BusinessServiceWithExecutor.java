@@ -14,8 +14,8 @@ public class BusinessServiceWithExecutor {
 	 * @param callback Callback to be invoked when Fibonacci number is found.
 	 */
 	public void computeFibonacci(int n, FibonacciCallback callback) {
-		// TODO Task: execute the logic below using java.util.concurrent.Executor
-		// The Executor should be declared as a field, not a local variable.
+		// TODO Task: execute the logic below using java.util.concurrent.ExecutorService
+		// The ExecutorService should be declared as a field, not a local variable.
 		long value = helper.findFibonacciValue(n);
 		callback.fibonacciComputed(value);
 	}
