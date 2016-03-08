@@ -12,58 +12,58 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
-import wdsr.exercise2.procon.OrderGeneratorModule.OrderGeneratorHelper;
+import wdsr.exercise2.procon.OrderProducerModule.OrderProducerHelper;
 
 public class ProducerConsumerTest {
 
 	@Test(timeout=20000)
-	public void testExchangeManualImpl() throws InterruptedException {
+	public void testBufferManualImpl() throws InterruptedException {
 		// given
-		Exchange exchange = new ExchangeManualImpl();
+		Buffer buffer = new BufferManualImpl();
 		Semaphore semaphore = new Semaphore(0);
-		OrderGeneratorHelperTestImpl generatorHelper = new OrderGeneratorHelperTestImpl(semaphore);
-		OrderGeneratorModule generator = new OrderGeneratorModule(generatorHelper, exchange);
-		OrderMatchingModule matcher = new OrderMatchingModule(exchange);
+		OrderProducerHelperTestImpl producerHelper = new OrderProducerHelperTestImpl(semaphore);
+		OrderProducerModule producer = new OrderProducerModule(producerHelper, buffer);
+		OrderConsumerModule consumer = new OrderConsumerModule(buffer);
 		
 		// when
-		generator.start();
-		matcher.start();
+		producer.start();
+		consumer.start();
 		
 		// then
-		assertTrue(semaphore.tryAcquire(OrderGeneratorModule.THREAD_COUNT, 10000, TimeUnit.SECONDS));
+		assertTrue(semaphore.tryAcquire(OrderProducerModule.THREAD_COUNT, 10000, TimeUnit.SECONDS));
 		TimeUnit.SECONDS.sleep(2);
-		List<Order> consumedOrders = matcher.getConsumedOrders();
-		assertEquals(OrderGeneratorModule.THREAD_COUNT * OrderGeneratorModule.ORDERS_PER_THREAD, consumedOrders.size());
+		List<Order> consumedOrders = consumer.getConsumedOrders();
+		assertEquals(OrderProducerModule.THREAD_COUNT * OrderProducerModule.ORDERS_PER_THREAD, consumedOrders.size());
 		assertEquals(consumedOrders.size(), new HashSet<Order>(consumedOrders).size());
 	}
 	
 	@Test(timeout=20000)
 	public void testExchangeQueueImpl() throws InterruptedException {
 		// given
-		Exchange exchange = new ExchangeQueueImpl();
+		Buffer buffer = new BufferQueueImpl();
 		Semaphore semaphore = new Semaphore(0);
-		OrderGeneratorHelperTestImpl generatorHelper = new OrderGeneratorHelperTestImpl(semaphore);
-		OrderGeneratorModule generator = new OrderGeneratorModule(generatorHelper, exchange);
-		OrderMatchingModule matcher = new OrderMatchingModule(exchange);
+		OrderProducerHelperTestImpl producerHelper = new OrderProducerHelperTestImpl(semaphore);
+		OrderProducerModule producer = new OrderProducerModule(producerHelper, buffer);
+		OrderConsumerModule consumer = new OrderConsumerModule(buffer);
 		
 		// when
-		generator.start();
-		matcher.start();
+		producer.start();
+		consumer.start();
 		
 		// then
-		assertTrue(semaphore.tryAcquire(OrderGeneratorModule.THREAD_COUNT, 10000, TimeUnit.SECONDS));
+		assertTrue(semaphore.tryAcquire(OrderProducerModule.THREAD_COUNT, 10000, TimeUnit.SECONDS));
 		TimeUnit.SECONDS.sleep(2);
-		List<Order> consumedOrders = matcher.getConsumedOrders();
-		assertEquals(OrderGeneratorModule.THREAD_COUNT * OrderGeneratorModule.ORDERS_PER_THREAD, consumedOrders.size());
+		List<Order> consumedOrders = consumer.getConsumedOrders();
+		assertEquals(OrderProducerModule.THREAD_COUNT * OrderProducerModule.ORDERS_PER_THREAD, consumedOrders.size());
 		assertEquals(consumedOrders.size(), new HashSet<Order>(consumedOrders).size());
 	}
 	
 	
-	private class OrderGeneratorHelperTestImpl implements OrderGeneratorHelper {
+	private class OrderProducerHelperTestImpl implements OrderProducerHelper {
 		private final AtomicInteger counter;
 		private final Semaphore semaphore;
 
-		public OrderGeneratorHelperTestImpl(Semaphore semaphore) {
+		public OrderProducerHelperTestImpl(Semaphore semaphore) {
 			this.semaphore = semaphore;
 			this.counter = new AtomicInteger(0);
 		}

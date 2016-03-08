@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
-public class OrderMatchingModule {
-	private final Exchange exchange;
+public class OrderConsumerModule {
+	private final Buffer exchange;
 	private final List<Order> consumedOrders;
 	
-	public OrderMatchingModule(Exchange exchange) {
+	public OrderConsumerModule(Buffer exchange) {
 		this.exchange = exchange;
 		this.consumedOrders = Collections.synchronizedList(new LinkedList<>());
 	}

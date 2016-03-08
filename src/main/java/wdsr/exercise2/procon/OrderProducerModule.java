@@ -4,15 +4,15 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class OrderGeneratorModule {
+public class OrderProducerModule {
 	static final int THREAD_COUNT = 5;
 	static final int ORDERS_PER_THREAD = 100000;
 
-	private OrderGeneratorHelper helper;
+	private OrderProducerHelper helper;
 	private ExecutorService executorService;
-	private Exchange exchange;
+	private Buffer exchange;
 	
-	public OrderGeneratorModule(OrderGeneratorHelper helper, Exchange exchange) {
+	public OrderProducerModule(OrderProducerHelper helper, Buffer exchange) {
 		this.helper = helper;
 		this.exchange = exchange;
 		this.executorService = Executors.newFixedThreadPool(THREAD_COUNT);
@@ -35,7 +35,7 @@ public class OrderGeneratorModule {
 		}
 	}
 
-	public static interface OrderGeneratorHelper {
+	public static interface OrderProducerHelper {
 		Order nextOrder();
 		void generationCompleted();
 	}

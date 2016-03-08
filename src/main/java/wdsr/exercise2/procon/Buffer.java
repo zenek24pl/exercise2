@@ -1,6 +1,6 @@
 package wdsr.exercise2.procon;
 
-public interface Exchange {
+public interface Buffer {
 	/**
 	 * Submits an order to the exchange. 
 	 * If there is no space available to store the new order then this method blocks 
