@@ -38,7 +38,7 @@ public class ProducerConsumerTest {
 	}
 	
 	@Test(timeout=20000)
-	public void testExchangeQueueImpl() throws InterruptedException {
+	public void testBufferQueueImpl() throws InterruptedException {
 		// given
 		Buffer buffer = new BufferQueueImpl();
 		Semaphore semaphore = new Semaphore(0);
