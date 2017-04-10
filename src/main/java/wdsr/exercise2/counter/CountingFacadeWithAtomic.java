@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CountingFacadeWithAtomic implements CountingFacade {
 	private final BusinessService businessService;
 	
-	private AtomicInteger invocationCounter;
+	private AtomicInteger invocationCounter=new AtomicInteger(0);
 
 	public CountingFacadeWithAtomic(BusinessService businessService) {
 		this.businessService = businessService;
@@ -22,7 +22,7 @@ public class CountingFacadeWithAtomic implements CountingFacade {
 	}
 	
 	public int getCount() {
-		return invocationCounter;
+		return invocationCounter.get();
 	}
 	
 }
