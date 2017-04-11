@@ -30,17 +30,19 @@ public class BusinessServiceWithCallable {
 		 long result = 0;
 		//executorService=Executors.newCachedThreadPool();
 		for(int i=0;i<100;i++){
-			 call= (Callable<Integer>) helper::nextRandom;
-			Future<Integer> submit=executorService.submit(call);
+			Callable<Integer> callable=new Callable<Integer>(){
+				@Override
+				public Integer call() throws Exception {
+					return helper.nextRandom();
+				}
+			};
+			Future<Integer> submit=executorService.submit(callable);
 			listOfCallableResults.add(submit);
-			
-		
 		}
 		for(Future<Integer> future:listOfCallableResults){
 			result+=future.get();
 		}
 		
-	//callback.
 		// TODO Task: 
 		// 1. create 100 Callable objects that invoke helper.nextRandom in their call() method.
 		// 2. submit all Callable objects to executorService (executorService.submit or executorService.invokeAll)
