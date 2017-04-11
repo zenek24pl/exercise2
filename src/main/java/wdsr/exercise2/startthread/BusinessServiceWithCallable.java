@@ -1,8 +1,11 @@
 package wdsr.exercise2.startthread;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import javax.security.auth.callback.Callback;
@@ -10,7 +13,8 @@ import javax.security.auth.callback.Callback;
 public class BusinessServiceWithCallable {
 	private final ExecutorService executorService;	
 	private final NumericHelper helper;
-	
+	Callable call;
+	List<Future<Integer>> listOfCallableResults=new ArrayList<Future<Integer>>();
 	public BusinessServiceWithCallable(ExecutorService executorService, NumericHelper helper) {
 		this.executorService = executorService;
 		this.helper = helper;
@@ -24,19 +28,16 @@ public class BusinessServiceWithCallable {
 	 */
 	public long sumOfRandomInts() throws InterruptedException, ExecutionException {	
 		 long result = 0;
-		
+		//executorService=Executors.newCachedThreadPool();
 		for(int i=0;i<100;i++){
-		Future future=executorService.submit(new Callable<Long>(){
-			public Long call() throws Exception{
-				helper.nextRandom();
-				return (long)helper.nextRandom();
-			}
+			 call= (Callable<Integer>) helper::nextRandom;
+			Future<Integer> submit=executorService.submit(call);
+			listOfCallableResults.add(submit);
 			
-	
-
-			});
-		executorService.shutdown();
-		result=result+future.get();
+		
+		}
+		for(Future<Integer> future:listOfCallableResults){
+			result+=future.get();
 		}
 		
 	//callback.
@@ -48,4 +49,6 @@ public class BusinessServiceWithCallable {
 		
 		return result;
 	}
+
+	
 }
